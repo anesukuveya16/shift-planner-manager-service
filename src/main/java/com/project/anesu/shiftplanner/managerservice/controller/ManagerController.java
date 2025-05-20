@@ -1,5 +1,7 @@
 package com.project.anesu.shiftplanner.managerservice.controller;
 
+import static com.project.anesu.shiftplanner.managerservice.controller.ManagerServiceRestEndpoints.LANDING_PAGE;
+
 import com.project.anesu.shiftplanner.managerservice.entity.schedule.Schedule;
 import com.project.anesu.shiftplanner.managerservice.entity.shift.ShiftRequest;
 import com.project.anesu.shiftplanner.managerservice.entity.vacation.VacationRequest;
@@ -16,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping(LANDING_PAGE)
 @AllArgsConstructor
 public class ManagerController {
 
@@ -30,14 +32,14 @@ public class ManagerController {
   }
 
   @PutMapping(ManagerServiceRestEndpoints.UPDATE_SCHEDULE)
-  public ResponseEntity<String> updateEmployeeSchedule(
+  public ResponseEntity<Schedule> updateEmployeeSchedule(
       @PathVariable Long scheduleId, @RequestBody Schedule updatedSchedule) {
     Schedule updated = scheduleService.updateEmployeeSchedule(scheduleId, updatedSchedule);
 
     if (updated != null) {
-      return ResponseEntity.ok().build();
+      return ResponseEntity.ok(updated);
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Schedule not found.");
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
   }
 
