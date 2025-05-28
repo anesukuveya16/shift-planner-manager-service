@@ -25,13 +25,13 @@ public class VacationRequestValidator {
 
   private void validateAnyOverlappingVacationRequests(
       VacationRequest vacationRequest, VacationRequestRepository repository) {
-    if (isOverlappingWithExistingRequest(vacationRequest, repository)) {
+    if (isOverlappingWithExistingApprovedRequest(vacationRequest, repository)) {
       throw new InvalidVacationRequestException(
           OVERLAPPING_VACATION_REQUEST_ERROR + vacationRequest.getEmployeeId());
     }
   }
 
-  private boolean isOverlappingWithExistingRequest(
+  private boolean isOverlappingWithExistingApprovedRequest(
       VacationRequest vacationRequest, VacationRequestRepository repository) {
 
     Long employeeId = vacationRequest.getEmployeeId();
@@ -42,8 +42,7 @@ public class VacationRequestValidator {
 
     for (VacationRequest existingRequest : existingRequests) {
       if (existingRequest.getStatus().equals(VacationRequestStatus.APPROVED)
-          || existingRequest.getStatus().equals(VacationRequestStatus.PENDING)
-              && isOverlapping(existingRequest, vacationRequest)) {
+          && isOverlapping(existingRequest, vacationRequest)) {
         return true;
       }
     }
@@ -58,11 +57,17 @@ public class VacationRequestValidator {
   private void validateTheRemainingVacationDays(
       VacationRequest vacationRequest, VacationRequestRepository repository) {
 
-    List<VacationRequest> usedVacationDaysInTheCurrentYear =
+    List<VacationRequest> allVacationRequestsForCurrentYear =
         getAllVacationRequestsForCurrentYear(vacationRequest, repository);
 
-    long existingUsedVacationDays =
-        calculatedTotalOfUsedVacationDays(usedVacationDaysInTheCurrentYear);
+    long existingUsedVacationDays = 0;
+
+    for (VacationRequest existingRequest : allVacationRequestsForCurrentYear) {
+      if (existingRequest.getStatus().equals(VacationRequestStatus.APPROVED)) {
+        existingUsedVacationDays +=
+            calculateDaysInRange(existingRequest.getStartDate(), existingRequest.getEndDate());
+      }
+    }
 
     int newVacationRequestDays = calculateNewRequestedVacationRequest(vacationRequest);
 
@@ -104,12 +109,6 @@ public class VacationRequestValidator {
         endDate.toLocalDate().isAfter(lastDayOfYear) ? lastDayOfYear : endDate.toLocalDate();
 
     return ChronoUnit.DAYS.between(adjustedStartDate, adjustedEndDate) + 1;
-  }
-
-  private long calculatedTotalOfUsedVacationDays(List<VacationRequest> vacationRequests) {
-    return vacationRequests.stream()
-        .mapToLong(vacation -> calculateDaysInRange(vacation.getStartDate(), vacation.getEndDate()))
-        .sum();
   }
 
   private int calculateNewRequestedVacationRequest(VacationRequest vacationRequest) {

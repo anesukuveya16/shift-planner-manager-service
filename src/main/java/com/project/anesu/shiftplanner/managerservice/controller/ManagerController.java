@@ -1,5 +1,7 @@
 package com.project.anesu.shiftplanner.managerservice.controller;
 
+import static com.project.anesu.shiftplanner.managerservice.controller.ManagerServiceRestEndpoints.LANDING_PAGE;
+
 import com.project.anesu.shiftplanner.managerservice.entity.schedule.Schedule;
 import com.project.anesu.shiftplanner.managerservice.entity.shift.ShiftRequest;
 import com.project.anesu.shiftplanner.managerservice.entity.vacation.VacationRequest;
@@ -16,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping(LANDING_PAGE)
 @AllArgsConstructor
 public class ManagerController {
 
@@ -30,14 +32,14 @@ public class ManagerController {
   }
 
   @PutMapping(ManagerServiceRestEndpoints.UPDATE_SCHEDULE)
-  public ResponseEntity<String> updateEmployeeSchedule(
+  public ResponseEntity<Schedule> updateEmployeeSchedule(
       @PathVariable Long scheduleId, @RequestBody Schedule updatedSchedule) {
     Schedule updated = scheduleService.updateEmployeeSchedule(scheduleId, updatedSchedule);
 
     if (updated != null) {
-      return ResponseEntity.ok().build();
+      return ResponseEntity.ok(updated);
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Schedule not found.");
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
   }
 
@@ -73,10 +75,10 @@ public class ManagerController {
     return shiftRequestService.approveShiftRequest(employeeId, shiftRequestId);
   }
 
-  @PutMapping(ManagerServiceRestEndpoints.DECLINE_SHIFT_REQUEST)
-  public ShiftRequest declineShiftRequest(
+  @PutMapping(ManagerServiceRestEndpoints.REJECT_SHIFT_REQUEST)
+  public ShiftRequest rejectShiftRequest(
       @PathVariable Long shiftRequestId, @RequestBody String rejectionReason) {
-    return shiftRequestService.declineShiftRequest(shiftRequestId, rejectionReason);
+    return shiftRequestService.rejectShiftRequest(shiftRequestId, rejectionReason);
   }
 
   @GetMapping(ManagerServiceRestEndpoints.GET_SHIFT_REQUEST_BY_EMPLOYEE_ID)
@@ -86,8 +88,10 @@ public class ManagerController {
 
   @GetMapping(ManagerServiceRestEndpoints.GET_SHIFT_REQUESTS_IN_RANGE)
   public List<ShiftRequest> getShiftRequestByDateRange(
-      @RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate) {
-    return shiftRequestService.getShiftRequestByDateRange(startDate, endDate);
+      @PathVariable Long employeeId,
+      @RequestParam("startDate") LocalDateTime startDate,
+      @RequestParam("endDate") LocalDateTime endDate) {
+    return shiftRequestService.getShiftRequestByDateRange(employeeId, startDate, endDate);
   }
 
   @PutMapping(ManagerServiceRestEndpoints.APPROVE_VACATION_REQUEST)
@@ -96,10 +100,10 @@ public class ManagerController {
     return vacationRequestService.approveVacationRequest(vacationRequestId, status);
   }
 
-  @PutMapping(ManagerServiceRestEndpoints.DECLINE_VACATION_REQUEST)
-  public VacationRequest declineVacationRequest(
-      @PathVariable Long vacationRequestId, @RequestParam String rejectionReason) {
-    return vacationRequestService.declineVacationRequest(vacationRequestId, rejectionReason);
+  @PutMapping(ManagerServiceRestEndpoints.REJECT_VACATION_REQUEST)
+  public VacationRequest rejectVacationRequest(
+      @PathVariable Long vacationRequestId, @RequestBody String rejectionReason) {
+    return vacationRequestService.rejectVacationRequest(vacationRequestId, rejectionReason);
   }
 
   @GetMapping(ManagerServiceRestEndpoints.GET_VACATIONS_BY_EMPLOYEE_ID)

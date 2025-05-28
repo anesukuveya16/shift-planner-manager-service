@@ -38,7 +38,7 @@ public class VacationRequestServiceImpl implements VacationRequestService {
   }
 
   @Override
-  public VacationRequest declineVacationRequest(Long vacationRequestId, String rejectionReason) {
+  public VacationRequest rejectVacationRequest(Long vacationRequestId, String rejectionReason) {
 
     VacationRequest vacationRequest =
         getVacationRequestByIdAndStatus(vacationRequestId, VacationRequestStatus.PENDING);

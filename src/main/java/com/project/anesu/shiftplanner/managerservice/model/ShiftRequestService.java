@@ -34,7 +34,7 @@ public interface ShiftRequestService {
    * @param rejectionReason the reason for rejecting the shift request
    * @return the declined {@link ShiftRequest} with updated status and reason
    */
-  ShiftRequest declineShiftRequest(Long employeeId, String rejectionReason);
+  ShiftRequest rejectShiftRequest(Long employeeId, String rejectionReason);
 
   /**
    * Retrieves a shift request for a specific employee.
@@ -64,5 +64,6 @@ public interface ShiftRequestService {
    * @return a list of {@link ShiftRequest} within the specified date range, or an empty list if
    *     none found
    */
-  List<ShiftRequest> getShiftRequestByDateRange(LocalDateTime startDate, LocalDateTime endDate);
+  List<ShiftRequest> getShiftRequestByDateRange(
+      Long employeeId, LocalDateTime startDate, LocalDateTime endDate);
 }

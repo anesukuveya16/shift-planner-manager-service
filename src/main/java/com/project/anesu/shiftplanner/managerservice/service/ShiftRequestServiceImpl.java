@@ -48,7 +48,7 @@ public class ShiftRequestServiceImpl implements ShiftRequestService {
   }
 
   @Override
-  public ShiftRequest declineShiftRequest(Long shiftRequestId, String rejectionReason) {
+  public ShiftRequest rejectShiftRequest(Long shiftRequestId, String rejectionReason) {
 
     ShiftRequest shiftRequest =
         getShiftRequestByIdAndStatus(shiftRequestId, ShiftRequestStatus.PENDING);
@@ -83,8 +83,8 @@ public class ShiftRequestServiceImpl implements ShiftRequestService {
 
   @Override
   public List<ShiftRequest> getShiftRequestByDateRange(
-      LocalDateTime startDate, LocalDateTime endDate) {
+      Long employeeId, LocalDateTime startDate, LocalDateTime endDate) {
 
-    return shiftRequestRepository.findByShiftDateBetween(startDate, endDate);
+    return shiftRequestRepository.findByShiftDateBetween(employeeId, startDate, endDate);
   }
 }
