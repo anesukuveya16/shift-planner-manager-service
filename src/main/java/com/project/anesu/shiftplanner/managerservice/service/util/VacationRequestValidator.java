@@ -25,13 +25,13 @@ public class VacationRequestValidator {
 
   private void validateAnyOverlappingVacationRequests(
       VacationRequest vacationRequest, VacationRequestRepository repository) {
-    if (isOverlappingWithExistingRequest(vacationRequest, repository)) {
+    if (isOverlappingWithExistingApprovedRequest(vacationRequest, repository)) {
       throw new InvalidVacationRequestException(
           OVERLAPPING_VACATION_REQUEST_ERROR + vacationRequest.getEmployeeId());
     }
   }
 
-  private boolean isOverlappingWithExistingRequest(
+  private boolean isOverlappingWithExistingApprovedRequest(
       VacationRequest vacationRequest, VacationRequestRepository repository) {
 
     Long employeeId = vacationRequest.getEmployeeId();
@@ -42,7 +42,6 @@ public class VacationRequestValidator {
 
     for (VacationRequest existingRequest : existingRequests) {
       if (existingRequest.getStatus().equals(VacationRequestStatus.APPROVED)
-          || existingRequest.getStatus().equals(VacationRequestStatus.PENDING)
               && isOverlapping(existingRequest, vacationRequest)) {
         return true;
       }
@@ -58,11 +57,19 @@ public class VacationRequestValidator {
   private void validateTheRemainingVacationDays(
       VacationRequest vacationRequest, VacationRequestRepository repository) {
 
-    List<VacationRequest> usedVacationDaysInTheCurrentYear =
+    List<VacationRequest> allVacationRequestsForCurrentYear =
         getAllVacationRequestsForCurrentYear(vacationRequest, repository);
 
-    long existingUsedVacationDays =
-        calculatedTotalOfUsedVacationDays(usedVacationDaysInTheCurrentYear);
+    long existingUsedVacationDays = 0;
+
+    // Loop through each vacation request found for the employee in the current year.
+    for (VacationRequest existingRequest : allVacationRequestsForCurrentYear) {
+      // Check if the current request in the loop is 'APPROVED'.
+      if (existingRequest.getStatus().equals(VacationRequestStatus.APPROVED)) {
+        // If it IS approved, add its days to our running total.
+        existingUsedVacationDays += calculateDaysInRange(existingRequest.getStartDate(), existingRequest.getEndDate());
+      }
+    }
 
     int newVacationRequestDays = calculateNewRequestedVacationRequest(vacationRequest);
 
