@@ -42,7 +42,7 @@ public class VacationRequestValidator {
 
     for (VacationRequest existingRequest : existingRequests) {
       if (existingRequest.getStatus().equals(VacationRequestStatus.APPROVED)
-              && isOverlapping(existingRequest, vacationRequest)) {
+          && isOverlapping(existingRequest, vacationRequest)) {
         return true;
       }
     }
@@ -62,12 +62,10 @@ public class VacationRequestValidator {
 
     long existingUsedVacationDays = 0;
 
-    // Loop through each vacation request found for the employee in the current year.
     for (VacationRequest existingRequest : allVacationRequestsForCurrentYear) {
-      // Check if the current request in the loop is 'APPROVED'.
       if (existingRequest.getStatus().equals(VacationRequestStatus.APPROVED)) {
-        // If it IS approved, add its days to our running total.
-        existingUsedVacationDays += calculateDaysInRange(existingRequest.getStartDate(), existingRequest.getEndDate());
+        existingUsedVacationDays +=
+            calculateDaysInRange(existingRequest.getStartDate(), existingRequest.getEndDate());
       }
     }
 
@@ -111,12 +109,6 @@ public class VacationRequestValidator {
         endDate.toLocalDate().isAfter(lastDayOfYear) ? lastDayOfYear : endDate.toLocalDate();
 
     return ChronoUnit.DAYS.between(adjustedStartDate, adjustedEndDate) + 1;
-  }
-
-  private long calculatedTotalOfUsedVacationDays(List<VacationRequest> vacationRequests) {
-    return vacationRequests.stream()
-        .mapToLong(vacation -> calculateDaysInRange(vacation.getStartDate(), vacation.getEndDate()))
-        .sum();
   }
 
   private int calculateNewRequestedVacationRequest(VacationRequest vacationRequest) {
