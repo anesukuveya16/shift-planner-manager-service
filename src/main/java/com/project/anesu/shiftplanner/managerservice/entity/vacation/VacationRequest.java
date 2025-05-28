@@ -3,6 +3,8 @@ package com.project.anesu.shiftplanner.managerservice.entity.vacation;
 import com.project.anesu.shiftplanner.managerservice.entity.manager.Manager;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.*;
 
 @Entity
@@ -27,6 +29,9 @@ public class VacationRequest {
   private VacationRequestStatus status;
 
   private String rejectionReason;
+
+  @OneToMany(mappedBy = "vacationRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<VacationEntry> vacationEntries;
 
   @ManyToOne
   @JoinColumn(name = "manager_id")
