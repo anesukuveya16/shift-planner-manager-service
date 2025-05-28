@@ -151,7 +151,6 @@ class ManagerServiceScheduleTest {
 
   @Test
   void shouldDeleteEmployeeScheduleSuccessfully() {
-
     String existingScheduleRequestBody =
         """
                 {
@@ -183,6 +182,47 @@ class ManagerServiceScheduleTest {
         .contentType(ContentType.JSON)
         .when()
         .delete(LANDING_PAGE + DELETE_SCHEDULE, scheduleId)
+        .then()
+        .statusCode(200);
+  }
+
+  @Test
+  void shouldAllowEmployeeToRetrieveScheduleWithGivenDateRange() {
+    String scheduleRequestBody =
+        """
+                {
+                    "startDate": "2025-01-15T08:00:00",
+                    "endDate": "2025-05-31T16:00:00",
+                    "rejectionReason": null,
+                    "shifts": [],
+                    "vacations": []
+                }
+            """;
+
+    Integer scheduleId =
+        RestAssured.given()
+            .contentType(ContentType.JSON)
+            .body(scheduleRequestBody)
+            .when()
+            .post(LANDING_PAGE + CREATE_SCHEDULE)
+            .then()
+            .log()
+            .ifValidationFails()
+            .statusCode(200)
+            .body("shifts.size()", equalTo(0))
+            .body("vacations.size()", equalTo(0))
+            .extract()
+            .path("id");
+
+    String startDate = "2025-01-01T00:00:00";
+    String endDate = "2025-08-30T23:59:59";
+
+    RestAssured.given()
+        .queryParam("startDate", startDate)
+        .queryParam("endDate", endDate)
+        .contentType(ContentType.JSON)
+        .when()
+        .get(LANDING_PAGE + GET_SCHEDULES_IN_RANGE, scheduleId)
         .then()
         .statusCode(200);
   }

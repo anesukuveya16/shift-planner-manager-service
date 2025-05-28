@@ -137,7 +137,7 @@ class ManagerServiceShiftRequestTest {
         .contentType(ContentType.JSON)
         .body(declineShiftRequestBody)
         .when()
-        .put(LANDING_PAGE + DECLINE_SHIFT_REQUEST, shiftRequestId)
+        .put(LANDING_PAGE + REJECT_SHIFT_REQUEST, shiftRequestId)
         .then()
         .statusCode(200)
         .body("status", equalTo("REJECTED"));
@@ -191,6 +191,70 @@ class ManagerServiceShiftRequestTest {
         .contentType(ContentType.JSON)
         .when()
         .get(LANDING_PAGE + GET_SHIFT_REQUEST_BY_EMPLOYEE_ID, employeeId)
+        .then()
+        .statusCode(200)
+        .body("findAll { it.shiftType == 'AFTERNOON_SHIFT' }.size()", greaterThanOrEqualTo(1))
+        .body("findAll { it.shiftType == 'NIGHT_SHIFT' }.size()", greaterThanOrEqualTo(1));
+  }
+
+  @Test
+  void shouldSuccessfullyRetrieveShiftRequestsWithinGivenDate() {
+    Long employeeId = 200L;
+
+    String shiftRequestBodyOne =
+        """
+                              {
+                              "shiftDate": "2025-10-20T13:00:00",
+                              "shiftLengthInHours": 8,
+                              "shiftType": "AFTERNOON_SHIFT",
+                              "shiftRequestStatus": "PENDING",
+                              "rejectionReason": null
+                            }
+                        """;
+
+    RestAssured.given()
+        .contentType(ContentType.JSON)
+        .body(shiftRequestBodyOne)
+        .when()
+        .post(LANDING_PAGE + CREATE_SHIFT_REQUEST, employeeId)
+        .then()
+        .statusCode(200)
+        .body("status", equalTo("PENDING"))
+        .body("shiftType", equalTo("AFTERNOON_SHIFT"))
+        .body("shiftLengthInHours", equalTo(8));
+
+    String shiftRequestBodyTwo =
+        """
+                              {
+                              "shiftDate": "2025-10-20T21:00:00",
+                              "shiftLengthInHours": 10,
+                              "shiftType": "NIGHT_SHIFT",
+                              "shiftRequestStatus": "PENDING",
+                              "rejectionReason": null
+                            }
+                        """;
+
+    RestAssured.given()
+        .contentType(ContentType.JSON)
+        .body(shiftRequestBodyTwo)
+        .when()
+        .post(LANDING_PAGE + CREATE_SHIFT_REQUEST, employeeId)
+        .then()
+        .statusCode(200)
+        .body("status", equalTo("PENDING"))
+        .body("shiftType", equalTo("NIGHT_SHIFT"))
+        .body("shiftLengthInHours", equalTo(10));
+
+    String startDate = "2025-09-01T00:00:00";
+    String endDate = "2025-11-01T23:59:59";
+
+    RestAssured.given()
+        .pathParam("employeeId", employeeId)
+        .queryParam("startDate", startDate)
+        .queryParam("endDate", endDate)
+        .contentType(ContentType.JSON)
+        .when()
+        .get(LANDING_PAGE + GET_SHIFT_REQUESTS_IN_RANGE, employeeId)
         .then()
         .statusCode(200)
         .body("findAll { it.shiftType == 'AFTERNOON_SHIFT' }.size()", greaterThanOrEqualTo(1))
