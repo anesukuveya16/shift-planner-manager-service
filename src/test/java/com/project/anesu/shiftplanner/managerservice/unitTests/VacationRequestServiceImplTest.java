@@ -60,7 +60,7 @@ class VacationRequestServiceImplTest {
   }
 
   @Test
-  void declineVacationRequest_ChangeStatusToDeclined() {
+  void rejectVacationRequest_ChangeStatusToDeclined() {
 
     // Given
     Long vacationRequestId = 10L;
@@ -78,7 +78,7 @@ class VacationRequestServiceImplTest {
 
     // When
     VacationRequest rejectedVacationRequest =
-        cut.declineVacationRequest(vacationRequestId, rejectionReason);
+        cut.rejectVacationRequest(vacationRequestId, rejectionReason);
 
     // Then
     assertEquals(VacationRequestStatus.REJECTED, rejectedVacationRequest.getStatus());

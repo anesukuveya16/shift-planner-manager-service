@@ -98,7 +98,7 @@ class VacationRequestValidatorTest {
   @Test
   void shouldThrowException_WhenThereIsAnOverlapBetweenVacationRequests() {
     // Given
-    Long employeeId = 2L;
+    long employeeId = 2L;
 
     List<VacationRequest> usedVacationRequests =
         pastApprovedRealisticVacationRequestScenarioInCurrentYear();
@@ -106,7 +106,7 @@ class VacationRequestValidatorTest {
     VacationRequest givenVacationRequest =
         createNewVacationRequestWithDuration(
             2L,
-            LocalDateTime.of(LocalDateTime.now().getYear(), 5, 4, 0, 0),
+            LocalDateTime.of(LocalDateTime.now().getYear(), 4, 7, 0, 0),
             3,
             VacationRequestStatus.PENDING);
 
@@ -163,7 +163,7 @@ class VacationRequestValidatorTest {
     VacationRequest newVacationRequest =
         createNewVacationRequestWithDuration(
             2L,
-            LocalDateTime.of(LocalDateTime.now().getYear(), 12, 30, 0, 0),
+            LocalDateTime.of(LocalDateTime.now().getYear(), 12, 20, 0, 0),
             6,
             VacationRequestStatus.PENDING);
 

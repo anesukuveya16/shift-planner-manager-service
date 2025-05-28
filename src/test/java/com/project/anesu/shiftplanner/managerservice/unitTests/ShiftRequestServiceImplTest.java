@@ -121,7 +121,7 @@ class ShiftRequestServiceImplTest {
   }
 
   @Test
-  void declineShiftRequest_ShouldChangeStatusToDeclined() {
+  void rejectShiftRequest_ShouldChangeStatusToDeclined() {
 
     // Given
     Long shiftRequestId = 1L;
@@ -140,7 +140,7 @@ class ShiftRequestServiceImplTest {
 
     // When
     ShiftRequest rejectedShiftRequest =
-        cut.declineShiftRequest(shiftRequest.getId(), rejectionReason);
+        cut.rejectShiftRequest(shiftRequest.getId(), rejectionReason);
 
     // Then
     assertEquals(rejectionReason, rejectedShiftRequest.getRejectionReason());
