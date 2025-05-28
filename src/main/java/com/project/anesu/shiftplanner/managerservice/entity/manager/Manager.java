@@ -1,5 +1,6 @@
 package com.project.anesu.shiftplanner.managerservice.entity.manager;
 
+import com.project.anesu.shiftplanner.managerservice.entity.shift.ShiftRequest;
 import com.project.anesu.shiftplanner.managerservice.entity.vacation.VacationRequest;
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -27,4 +28,7 @@ public class Manager {
 
   @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<VacationRequest> vacationRequests;
+
+  @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<ShiftRequest> shiftRequests;
 }

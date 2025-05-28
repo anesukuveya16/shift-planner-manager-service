@@ -1,8 +1,12 @@
 package com.project.anesu.shiftplanner.managerservice.entity.vacation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.*;
 
 @Entity
@@ -17,6 +21,7 @@ public class VacationEntry {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "vacation_request_id", nullable = false)
   private VacationRequest vacationRequest;
@@ -31,6 +36,7 @@ public class VacationEntry {
         .endDate(vacationRequest.getEndDate())
         .vacationDuration(
             ChronoUnit.DAYS.between(vacationRequest.getStartDate(), vacationRequest.getEndDate()))
+        .vacationRequest(vacationRequest)
         .build();
   }
 }

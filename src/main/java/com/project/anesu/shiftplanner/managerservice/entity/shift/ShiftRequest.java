@@ -1,5 +1,6 @@
 package com.project.anesu.shiftplanner.managerservice.entity.shift;
 
+import com.project.anesu.shiftplanner.managerservice.entity.manager.Manager;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;
@@ -29,4 +30,8 @@ public class ShiftRequest {
 
   @Enumerated(EnumType.STRING)
   private ShiftType shiftType;
+
+  @ManyToOne
+  @JoinColumn(name = "manager_id")
+  private Manager manager;
 }
