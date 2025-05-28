@@ -13,12 +13,12 @@ public class ManagerServiceRestEndpoints {
   public static final String CREATE_SHIFT_REQUEST = "/employees/{employeeId}/shifts";
   public static final String APPROVE_SHIFT_REQUEST =
       "/employees/{employeeId}/shifts/{shiftRequestId}/approve";
-  public static final String DECLINE_SHIFT_REQUEST = "/shifts/{shiftRequestId}/decline";
+  public static final String REJECT_SHIFT_REQUEST = "/shifts/{shiftRequestId}/decline";
   public static final String GET_SHIFT_REQUEST_BY_EMPLOYEE_ID = "/employees/{employeeId}/shifts";
-  public static final String GET_SHIFT_REQUESTS_IN_RANGE = "/shifts/range";
+  public static final String GET_SHIFT_REQUESTS_IN_RANGE = "/employees/{employeeId}/shifts/range";
 
   public static final String APPROVE_VACATION_REQUEST = "/vacations/{vacationRequestId}/approve";
-  public static final String DECLINE_VACATION_REQUEST = "/vacations/{vacationRequestId}/decline";
+  public static final String REJECT_VACATION_REQUEST = "/vacations/{vacationRequestId}/decline";
   public static final String GET_VACATIONS_BY_EMPLOYEE_ID = "/employees/{employeeId}/vacations";
   public static final String GET_EMPLOYEE_VACATIONS_IN_RANGE =
       "/employees/{employeeId}/vacations/range";
