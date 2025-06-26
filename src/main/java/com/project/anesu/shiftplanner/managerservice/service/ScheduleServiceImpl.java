@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
 
-  private static final String SCHEDULE_NOT_FOUND_EXCEPTION = "Schedule not found with id ";
   private final ScheduleRepository scheduleRepository;
   private final ScheduleValidator scheduleValidator;
 
@@ -42,7 +41,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         scheduleRepository
             .findById(scheduleId)
             .orElseThrow(
-                () -> new ScheduleNotFoundException(SCHEDULE_NOT_FOUND_EXCEPTION + scheduleId));
+                () -> new ScheduleNotFoundException((scheduleId)));
 
     Schedule newlyUpdatedSchedule =
         updateExistingEmployeeSchedule(updatedSchedule, existingEmployeeSchedule);
@@ -111,7 +110,7 @@ public class ScheduleServiceImpl implements ScheduleService {
   public void deleteSchedule(Long scheduleId) throws ScheduleNotFoundException {
 
     if (!scheduleRepository.existsById(scheduleId)) {
-      throw new ScheduleNotFoundException(SCHEDULE_NOT_FOUND_EXCEPTION + scheduleId);
+      throw new ScheduleNotFoundException(scheduleId);
     }
     scheduleRepository.deleteById(scheduleId);
   }

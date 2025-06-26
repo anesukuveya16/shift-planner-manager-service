@@ -1,5 +1,6 @@
 package com.project.anesu.shiftplanner.managerservice.controller;
 
+import static com.project.anesu.shiftplanner.managerservice.controller.ManagerServiceRestEndpoints.*;
 import static com.project.anesu.shiftplanner.managerservice.controller.ManagerServiceRestEndpoints.LANDING_PAGE;
 
 import com.project.anesu.shiftplanner.managerservice.entity.schedule.Schedule;
@@ -26,12 +27,12 @@ public class ManagerController {
   private final ShiftRequestServiceImpl shiftRequestService;
   private final VacationRequestServiceImpl vacationRequestService;
 
-  @PostMapping(ManagerServiceRestEndpoints.CREATE_SCHEDULE)
+  @PostMapping(CREATE_SCHEDULE)
   public Schedule createSchedule(@RequestBody Schedule schedule) {
     return scheduleService.createSchedule(schedule);
   }
 
-  @PutMapping(ManagerServiceRestEndpoints.UPDATE_SCHEDULE)
+  @PutMapping(UPDATE_SCHEDULE)
   public ResponseEntity<Schedule> updateEmployeeSchedule(
       @PathVariable Long scheduleId, @RequestBody Schedule updatedSchedule) {
     Schedule updated = scheduleService.updateEmployeeSchedule(scheduleId, updatedSchedule);
@@ -43,12 +44,12 @@ public class ManagerController {
     }
   }
 
-  @GetMapping(ManagerServiceRestEndpoints.GET_SCHEDULE_BY_ID)
+  @GetMapping(GET_SCHEDULE_BY_ID)
   public Optional<Schedule> getScheduleById(@PathVariable Long scheduleId) {
     return scheduleService.getScheduleById(scheduleId);
   }
 
-  @GetMapping(ManagerServiceRestEndpoints.GET_SCHEDULES_IN_RANGE)
+  @GetMapping(GET_SCHEDULES_IN_RANGE)
   public Optional<List<Schedule>> getAllEmployeeSchedulesWithinGivenDateRange(
       @PathVariable Long scheduleId,
       @RequestParam LocalDateTime startDate,
@@ -57,36 +58,36 @@ public class ManagerController {
         scheduleId, startDate, endDate);
   }
 
-  @DeleteMapping(ManagerServiceRestEndpoints.DELETE_SCHEDULE)
+  @DeleteMapping(DELETE_SCHEDULE)
   public ResponseEntity<String> deleteSchedule(@PathVariable Long scheduleId) {
     scheduleService.deleteSchedule(scheduleId);
     return ResponseEntity.ok("Schedule deleted successfully.");
   }
 
-  @PostMapping(ManagerServiceRestEndpoints.CREATE_SHIFT_REQUEST)
+  @PostMapping(CREATE_SHIFT_REQUEST)
   public ShiftRequest sendShiftRequestToEmployee(
       @PathVariable Long employeeId, @RequestBody ShiftRequest shiftRequest) {
     return shiftRequestService.sendShiftRequestToEmployee(employeeId, shiftRequest);
   }
 
-  @PutMapping(ManagerServiceRestEndpoints.APPROVE_SHIFT_REQUEST)
+  @PutMapping(APPROVE_SHIFT_REQUEST)
   public ShiftRequest approveShiftRequest(
       @PathVariable Long employeeId, @PathVariable Long shiftRequestId) {
     return shiftRequestService.approveShiftRequest(employeeId, shiftRequestId);
   }
 
-  @PutMapping(ManagerServiceRestEndpoints.REJECT_SHIFT_REQUEST)
+  @PutMapping(REJECT_SHIFT_REQUEST)
   public ShiftRequest rejectShiftRequest(
       @PathVariable Long shiftRequestId, @RequestBody String rejectionReason) {
     return shiftRequestService.rejectShiftRequest(shiftRequestId, rejectionReason);
   }
 
-  @GetMapping(ManagerServiceRestEndpoints.GET_SHIFT_REQUEST_BY_EMPLOYEE_ID)
+  @GetMapping(GET_SHIFT_REQUEST_BY_EMPLOYEE_ID)
   public List<ShiftRequest> getShiftRequestByEmployeeId(@PathVariable Long employeeId) {
     return shiftRequestService.getShiftRequestByEmployeeId(employeeId);
   }
 
-  @GetMapping(ManagerServiceRestEndpoints.GET_SHIFT_REQUESTS_IN_RANGE)
+  @GetMapping(GET_SHIFT_REQUESTS_IN_RANGE)
   public List<ShiftRequest> getShiftRequestByDateRange(
       @PathVariable Long employeeId,
       @RequestParam("startDate") LocalDateTime startDate,
@@ -94,24 +95,24 @@ public class ManagerController {
     return shiftRequestService.getShiftRequestByDateRange(employeeId, startDate, endDate);
   }
 
-  @PutMapping(ManagerServiceRestEndpoints.APPROVE_VACATION_REQUEST)
+  @PutMapping(APPROVE_VACATION_REQUEST)
   public VacationRequest approveVacationRequest(
       @PathVariable Long vacationRequestId, @RequestParam VacationRequestStatus status) {
     return vacationRequestService.approveVacationRequest(vacationRequestId, status);
   }
 
-  @PutMapping(ManagerServiceRestEndpoints.REJECT_VACATION_REQUEST)
+  @PutMapping(REJECT_VACATION_REQUEST)
   public VacationRequest rejectVacationRequest(
       @PathVariable Long vacationRequestId, @RequestBody String rejectionReason) {
     return vacationRequestService.rejectVacationRequest(vacationRequestId, rejectionReason);
   }
 
-  @GetMapping(ManagerServiceRestEndpoints.GET_VACATIONS_BY_EMPLOYEE_ID)
+  @GetMapping(GET_VACATIONS_BY_EMPLOYEE_ID)
   public List<VacationRequest> getVacationRequestsByEmployeeId(@PathVariable Long employeeId) {
     return vacationRequestService.getVacationRequestsByEmployeeId(employeeId);
   }
 
-  @GetMapping(ManagerServiceRestEndpoints.GET_EMPLOYEE_VACATIONS_IN_RANGE)
+  @GetMapping(GET_EMPLOYEE_VACATIONS_IN_RANGE)
   public List<VacationRequest> getVacationByIdAndDateRange(
       @PathVariable Long employeeId,
       @RequestParam LocalDateTime startDate,
@@ -119,7 +120,7 @@ public class ManagerController {
     return vacationRequestService.getVacationByIdAndDateRange(employeeId, startDate, endDate);
   }
 
-  @GetMapping(ManagerServiceRestEndpoints.GET_TEAM_CALENDAR)
+  @GetMapping(GET_TEAM_CALENDAR)
   public List<VacationRequest> getTeamCalendar(
       @PathVariable Long officeLocationId,
       @RequestParam LocalDateTime startDate,
