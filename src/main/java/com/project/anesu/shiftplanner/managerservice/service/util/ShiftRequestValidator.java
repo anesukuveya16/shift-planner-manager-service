@@ -19,9 +19,7 @@ public class ShiftRequestValidator {
 
     if (shiftRequestOptional.isPresent()) {
       ShiftRequest existingShift = shiftRequestOptional.get();
-      boolean exceedsMaximumWorkingHours =
-          existingShift.getShiftLengthInHours() + shiftRequest.getShiftLengthInHours()
-              >= MAX_LEGAL_WORKING_HOURS;
+      boolean exceedsMaximumWorkingHours = isMaximumWorkingHoursExceeded(shiftRequest, existingShift);
 
       if (exceedsMaximumWorkingHours) {
         throw new ShiftValidationException(
@@ -35,4 +33,10 @@ public class ShiftRequestValidator {
       }
     }
   }
+
+  private static boolean isMaximumWorkingHoursExceeded(ShiftRequest shiftRequest, ShiftRequest existingShift) {
+    return existingShift.getShiftLengthInHours() + shiftRequest.getShiftLengthInHours()
+            >= MAX_LEGAL_WORKING_HOURS;
+  }
+
 }
