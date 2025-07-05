@@ -25,4 +25,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
       @Param("employeeId") Long employeeId,
       @Param("startOfWeek") LocalDateTime startOfWeek,
       @Param("endOfWeek") LocalDateTime endOfWeek);
+
+  @Query("SELECT s FROM Schedule s WHERE s.employeeId = :employeeId AND s.startDate = :shiftDate")
+  Optional<Schedule> findByEmployeeIdAndDateRange(
+      @Param("employeeId") Long employeeId, @Param("shiftDate") LocalDateTime dateTime);
 }

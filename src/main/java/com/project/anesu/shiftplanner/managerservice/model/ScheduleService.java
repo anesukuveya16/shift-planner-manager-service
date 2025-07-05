@@ -71,4 +71,7 @@ public interface ScheduleService {
    * @param scheduleId the ID of the {@link Schedule} to delete
    */
   void deleteSchedule(Long scheduleId) throws ScheduleNotFoundException;
+
+  // TODO:...
+  Optional<Schedule> getEmployeeScheduleForGivenDate(Long employeeId, LocalDateTime shiftDate);
 }

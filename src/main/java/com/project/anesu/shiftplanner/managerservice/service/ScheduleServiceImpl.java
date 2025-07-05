@@ -40,8 +40,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     Schedule existingEmployeeSchedule =
         scheduleRepository
             .findById(scheduleId)
-            .orElseThrow(
-                () -> new ScheduleNotFoundException((scheduleId)));
+            .orElseThrow(() -> new ScheduleNotFoundException((scheduleId)));
 
     Schedule newlyUpdatedSchedule =
         updateExistingEmployeeSchedule(updatedSchedule, existingEmployeeSchedule);
@@ -51,10 +50,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     return scheduleRepository.save(newlyUpdatedSchedule);
   }
 
+  // TODO: enhance this method so that it looks similar to the one in employee service.
   @Override
   public Schedule addShiftToSchedule(Long employeeId, ShiftRequest approvedShiftRequest) {
 
-    validateShiftRequest(approvedShiftRequest);
+    validateApprovedShiftRequest(approvedShiftRequest);
 
     Optional<Schedule> scheduleInApprovedShiftCalenderWeek =
         getScheduleForApprovedShiftCalendarWeek(employeeId, approvedShiftRequest);
@@ -71,11 +71,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
   }
 
+  // TODO: enhance this method so that it looks similar to the one in employee service.
   @Override
   public Schedule addApprovedVacationRequestToSchedule(
       Long employeeId, VacationRequest approvedVacationRequest) {
 
-    validateVacationRequest(approvedVacationRequest);
+    validateApprovedVacationRequest(approvedVacationRequest);
 
     Optional<Schedule> scheduleInApprovedVacationCalenderWeek =
         getScheduleForApprovedVacationCalendarWeek(employeeId, approvedVacationRequest);
@@ -107,6 +108,12 @@ public class ScheduleServiceImpl implements ScheduleService {
   }
 
   @Override
+  public Optional<Schedule> getEmployeeScheduleForGivenDate(
+      Long employeeId, LocalDateTime shiftDate) {
+    return scheduleRepository.findByEmployeeIdAndDateRange(employeeId, shiftDate);
+  }
+
+  @Override
   public void deleteSchedule(Long scheduleId) throws ScheduleNotFoundException {
 
     if (!scheduleRepository.existsById(scheduleId)) {
@@ -133,13 +140,15 @@ public class ScheduleServiceImpl implements ScheduleService {
         .plusHours(approvedShiftRequest.getShiftLengthInHours());
   }
 
-  private void validateVacationRequest(VacationRequest approvedVacationRequest) {
+  private void validateApprovedVacationRequest(VacationRequest approvedVacationRequest) {
 
     if (!VacationRequestStatus.APPROVED.equals(approvedVacationRequest.getStatus())) {
       throw new InvalidScheduleException(
           "Invalid schedule operation. Only approved vacation requests can be added to the schedule.");
     }
   }
+
+  // TODO: enhance this method so that it looks similar to the one in employee service.
 
   private Schedule addNewVacationEntryToExistingSchedule(
       VacationRequest approvedVacationRequest,
@@ -157,6 +166,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
   }
 
+  // TODO: combine instatiation and the add operation of the list
   private Schedule createNewScheduleForApprovedVacationRequest(
       Long employeeId, VacationRequest approvedVacationRequest) {
 
@@ -186,7 +196,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         employeeId, startOfVacationCalendarWeek, endOfVacationCalendarWeek);
   }
 
-  private void validateShiftRequest(ShiftRequest approvedShiftRequest) {
+  private void validateApprovedShiftRequest(ShiftRequest approvedShiftRequest) {
 
     if (!ShiftRequestStatus.APPROVED.equals(approvedShiftRequest.getStatus())) {
       throw new InvalidScheduleException(
@@ -194,6 +204,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
   }
 
+  // TODO... same as 1
   private Schedule addNewShiftEntryToExistingSchedule(
       ShiftRequest approvedShiftRequest, Optional<Schedule> scheduleInApprovedShiftCalenderWeek) {
 

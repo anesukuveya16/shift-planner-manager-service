@@ -40,19 +40,14 @@ public class ScheduleValidator {
       }
     }
 
-    // Validate working hours per week
-
     Map<LocalDateTime, Long> dailyWorkingHours =
-        schedule.getShifts().stream() // list of shifts is turning into streams
+        schedule.getShifts().stream()
             .collect(
                 Collectors.groupingBy(
-                    ShiftEntry::getShiftDate, // grouping by shift date
-                    Collectors.summingLong(
-                        ShiftEntry::getWorkingHours))); // sum up working hours in EACH DAY
+                    ShiftEntry::getShiftDate, Collectors.summingLong(ShiftEntry::getWorkingHours)));
 
-    for (LocalDateTime date : dailyWorkingHours.keySet()) { // loops each day
-      long weeklyHours =
-          calculateWeeklyHours(dailyWorkingHours, date); // adds total hours worked in the week
+    for (LocalDateTime date : dailyWorkingHours.keySet()) {
+      long weeklyHours = calculateWeeklyHours(dailyWorkingHours, date);
       if (weeklyHours > MAX_WORKING_HOURS_PER_WEEK) {
         throw new InvalidScheduleException("Weekly working hours exceed maximum limit.");
       }
@@ -65,17 +60,8 @@ public class ScheduleValidator {
     LocalDateTime weekEnd = date.with(DayOfWeek.SUNDAY);
 
     return dailyWorkingHours.entrySet().stream()
-        .filter(
-            entry ->
-                !entry.getKey().isBefore(weekStart)
-                    && !entry
-                        .getKey()
-                        .isAfter(
-                            weekEnd)) // filters days between Monday and Sunday and ignores any days
-        // after that.
-        .mapToLong(
-            Map.Entry
-                ::getValue) // extracts the number of hours from all these days and adds them up.
+        .filter(entry -> !entry.getKey().isBefore(weekStart) && !entry.getKey().isAfter(weekEnd))
+        .mapToLong(Map.Entry::getValue)
         .sum();
   }
 }

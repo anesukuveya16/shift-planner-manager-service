@@ -83,6 +83,6 @@ public class VacationRequestServiceImpl implements VacationRequestService {
         .orElseThrow(
             () ->
                 new VacationRequestNotFoundException(
-                    "Vacation request with id: " + vacationRequestId + " does not exist."));
+                    "Vacation request with id: " + vacationRequestId + " and status " + status + " does not exist."));
   }
 }

@@ -1,8 +1,8 @@
 package com.project.anesu.shiftplanner.managerservice.service.util;
 
+import com.project.anesu.shiftplanner.managerservice.entity.schedule.Schedule;
 import com.project.anesu.shiftplanner.managerservice.entity.shift.ShiftRequest;
-import com.project.anesu.shiftplanner.managerservice.entity.shift.ShiftRequestStatus;
-import com.project.anesu.shiftplanner.managerservice.model.repository.ShiftRequestRepository;
+import com.project.anesu.shiftplanner.managerservice.model.ScheduleService;
 import com.project.anesu.shiftplanner.managerservice.service.exception.ShiftValidationException;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
@@ -11,32 +11,30 @@ import org.springframework.stereotype.Component;
 public class ShiftRequestValidator {
   private static final int MAX_LEGAL_WORKING_HOURS = 10;
 
-  public void validateShiftRequest(
-      ShiftRequest shiftRequest, ShiftRequestRepository shiftRequestRepository) {
-    Optional<ShiftRequest> shiftRequestOptional =
-        shiftRequestRepository.findByEmployeeIdAndShiftDateAndStatus(
-            shiftRequest.getEmployeeId(), shiftRequest.getShiftDate(), ShiftRequestStatus.APPROVED);
+  public void validateShiftRequest(ShiftRequest shiftRequest, ScheduleService scheduleService) {
 
-    if (shiftRequestOptional.isPresent()) {
-      ShiftRequest existingShift = shiftRequestOptional.get();
-      boolean exceedsMaximumWorkingHours = isMaximumWorkingHoursExceeded(shiftRequest, existingShift);
+    Optional<Schedule> existingSchedule =
+        scheduleService.getEmployeeScheduleForGivenDate(
+            shiftRequest.getEmployeeId(), shiftRequest.getShiftDate());
 
-      if (exceedsMaximumWorkingHours) {
-        throw new ShiftValidationException(
-            "New shift request violates working hours. Employee ID: "
-                + shiftRequest.getEmployeeId()
-                + " already has "
-                + shiftRequestOptional.get().getShiftLengthInHours()
-                + " hours for this shift scheduled/recorded. Maximum working hours should not exceed : "
-                + MAX_LEGAL_WORKING_HOURS
-                + " hours.");
-      }
+    if (shiftExceedsMaximumWorkingHours(shiftRequest, existingSchedule)) {
+      throw new ShiftValidationException(
+          "New shift request violates working hours. Employee ID: "
+              + shiftRequest.getEmployeeId()
+              + " already has "
+              + existingSchedule.get().getTotalWorkingHours()
+              + " hours for this shift scheduled/recorded. Maximum working hours should not exceed : "
+              + MAX_LEGAL_WORKING_HOURS
+              + " hours.");
     }
   }
 
-  private static boolean isMaximumWorkingHoursExceeded(ShiftRequest shiftRequest, ShiftRequest existingShift) {
-    return existingShift.getShiftLengthInHours() + shiftRequest.getShiftLengthInHours()
-            >= MAX_LEGAL_WORKING_HOURS;
+  private boolean shiftExceedsMaximumWorkingHours(
+      ShiftRequest incomingShiftRequest, Optional<Schedule> existingSchedule) {
+    return existingSchedule.stream()
+        .anyMatch(
+            scheduledShift ->
+                scheduledShift.getTotalWorkingHours() + incomingShiftRequest.getShiftLengthInHours()
+                    >= MAX_LEGAL_WORKING_HOURS);
   }
-
 }

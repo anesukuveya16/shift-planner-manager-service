@@ -4,7 +4,6 @@ import com.project.anesu.shiftplanner.managerservice.entity.manager.Manager;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import lombok.*;
 
 @Entity

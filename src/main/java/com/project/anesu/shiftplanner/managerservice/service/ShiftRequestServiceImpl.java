@@ -23,7 +23,7 @@ public class ShiftRequestServiceImpl implements ShiftRequestService {
   @Override
   public ShiftRequest sendShiftRequestToEmployee(Long employeeId, ShiftRequest shiftRequest) {
 
-    shiftRequestValidator.validateShiftRequest(shiftRequest, shiftRequestRepository);
+    shiftRequestValidator.validateShiftRequest(shiftRequest, scheduleService);
 
     shiftRequest.setEmployeeId(employeeId);
     shiftRequest.setStatus(ShiftRequestStatus.PENDING);
@@ -37,7 +37,7 @@ public class ShiftRequestServiceImpl implements ShiftRequestService {
     ShiftRequest shiftRequest =
         getShiftRequestByIdAndStatus(shiftRequestId, ShiftRequestStatus.PENDING);
 
-    shiftRequestValidator.validateShiftRequest(shiftRequest, shiftRequestRepository);
+    shiftRequestValidator.validateShiftRequest(shiftRequest, scheduleService);
 
     shiftRequest.setStatus(ShiftRequestStatus.APPROVED);
     ShiftRequest approvedShiftRequest = shiftRequestRepository.save(shiftRequest);
@@ -77,8 +77,7 @@ public class ShiftRequestServiceImpl implements ShiftRequestService {
                     "Could not find shift with status []"
                         + status
                         + " and ID [] "
-                        + shiftRequestId
-                        + "to approve."));
+                        + shiftRequestId));
   }
 
   @Override

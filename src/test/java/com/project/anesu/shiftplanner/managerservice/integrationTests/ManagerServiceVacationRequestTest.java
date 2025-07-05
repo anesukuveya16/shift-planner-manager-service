@@ -94,7 +94,7 @@ class ManagerServiceVacationRequestTest {
   void getRequestedVacationRequestsWithin_GivenDateRange() {
 
     String startDate = "2025-01-01T00:00:00";
-    String endDate =  "2025-03-31T23:59:59";
+    String endDate = "2025-03-31T23:59:59";
 
     RestAssured.given()
         .queryParam("startDate", startDate)
@@ -112,16 +112,16 @@ class ManagerServiceVacationRequestTest {
   void getTeamCalendar_WithinGivenDateRange() {
 
     String startDate = "2025-01-01T00:00:00";
-    String endDate =  "2025-12-31T23:59:59";
+    String endDate = "2025-12-31T23:59:59";
 
     RestAssured.given()
-            .queryParam("startDate", startDate)
-            .queryParam("endDate", endDate)
-            .contentType(ContentType.JSON)
-            .when()
-            .get(LANDING_PAGE + GET_TEAM_CALENDAR, OFFICE_LOCATION_ID)
-            .then()
-            .statusCode(200)
-            .body("[0].officeLocationId", equalTo(OFFICE_LOCATION_ID.intValue()));
+        .queryParam("startDate", startDate)
+        .queryParam("endDate", endDate)
+        .contentType(ContentType.JSON)
+        .when()
+        .get(LANDING_PAGE + GET_TEAM_CALENDAR, OFFICE_LOCATION_ID)
+        .then()
+        .statusCode(200)
+        .body("[0].officeLocationId", equalTo(OFFICE_LOCATION_ID.intValue()));
   }
 }
