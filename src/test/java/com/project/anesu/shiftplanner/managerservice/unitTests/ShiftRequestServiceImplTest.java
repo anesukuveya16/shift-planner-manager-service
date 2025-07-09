@@ -105,7 +105,7 @@ class ShiftRequestServiceImplTest {
 
     doThrow(ShiftValidationException.class)
         .when(shiftRequestValidatorMock)
-        .validateShiftRequest(any(ShiftRequest.class), any(ShiftRequestRepository.class));
+        .validateShiftRequest(any(ShiftRequest.class), any(ScheduleService.class));
 
     // When
 
@@ -115,8 +115,7 @@ class ShiftRequestServiceImplTest {
 
     // Then
 
-    verify(shiftRequestValidatorMock)
-        .validateShiftRequest(shiftRequest, shiftRequestRepositoryMock);
+    verify(shiftRequestValidatorMock).validateShiftRequest(shiftRequest, scheduleServiceMock);
     verifyNoMoreInteractions(shiftRequestRepositoryMock);
   }
 
@@ -225,7 +224,7 @@ class ShiftRequestServiceImplTest {
 
     doThrow(ShiftValidationException.class)
         .when(shiftRequestValidatorMock)
-        .validateShiftRequest(shiftRequest, shiftRequestRepositoryMock);
+        .validateShiftRequest(shiftRequest, scheduleServiceMock);
 
     // When
 

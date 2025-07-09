@@ -72,6 +72,11 @@ public interface ScheduleService {
    */
   void deleteSchedule(Long scheduleId) throws ScheduleNotFoundException;
 
-  // TODO:...
+  /**
+   * Retrieves the full schedule of a specific employee across all available dates.
+   *
+   * @param employeeId the ID of the employee whose schedule is being requested
+   * @return a list of {@link Schedule} entries associated with the employee
+   */
   Optional<Schedule> getEmployeeScheduleForGivenDate(Long employeeId, LocalDateTime shiftDate);
 }
