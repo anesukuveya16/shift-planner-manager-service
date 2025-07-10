@@ -1,53 +1,68 @@
-Shift planner: Manager Service
 
-This microservice is part of a employee scheduling system in the health sector. The Manager Microservice focuses on enabling managers to:
+# Shift Planner: Manager Service
 
-- View and manage employee schedules
+This microservice is part of an **employee scheduling system** in the healthcare sector.
 
-- Approve or reject shift requests
+The **Manager Microservice** focuses on enabling managers to:
 
-- Approve or rejcet vacation requests
-
+- View and manage employee schedules  
+- Approve or reject shift requests  
+- Approve or reject vacation requests  
 - Update schedules
 
-It operates independently of the Employee Microservice but communicates with it to ensure proper validation of employee data,  as well as to maintain consistency across services.
+It operates **independently** of the Employee Microservice but communicates with it to:
 
-Tech Stack
+- To ensure proper validate employee of data  
+- Maintain consistency across the services
 
-Java (SapMachine 21)
+## Tech Stack
 
-Spring Boot
+- Java (SapMachine 21)  
+- Spring Boot  
+- H2 Database (in-memory)  
+- Maven  
+- Lombok  
+- JUnit 5 for testing  
+- Rest Assured for integration testing  
 
-H2 Database (in-memory)
+##  Key Features
 
-Maven
+- Approve or reject shift requests  
+- Approve or reject vacation requests  
+- Update employee schedules based on manager actions  
+- Get a specific employee’s schedule for a given day  
+- Get a list of an employee’s shift requests in a specific date range  
+- Delete existing schedules  
+- Retrieve team calendar for a specific date range and location  
+- Validation layer to enforce business rules (e.g., no overlapping shifts)  
 
-Lombok
+##  Unit tests cover
 
-JUnit 5 for testing
+Shift request validation
 
-Rest assured for testing
+Vacation request validation
 
-Key Features
+Schedule conflict detection
 
-- Approve or reject shift requests
+Successful and failing approval flows
 
-- Approve or reject vacation requests
+##  Integration tests cover 
 
-- Update employee schedules based on manager actions
+REST Endpoints functionality
 
-- Get a specific employee’s schedule for a given day
+##  Validation rules
 
-- Get a list employee´s shift request in a specifc date range
+Shifts and vacations must not overlap
 
-- Delete existing schedules
+Only "pendin" shift or vacation requests can be approved
 
-- Retreive team calendar for specifc date range and location
+Vacation days must be valid future dates
 
-- Validation layer to ensure business rules (e.g., no overlapping shifts)
+Weekly working hours must not be exceeded
 
+Annual vacation days must not be exceeded
 
-REST Endpoints
+##  REST Endpints
 
 Schedule Request
 | Method | Endpoint                                      | Description             |
@@ -79,43 +94,17 @@ Vacation Request
 | `GET`  | `/employees/{employeeId}/vacations/range`                   | Get vacation requests in range  |
 | `GET`  | `/offices/{officeLocationId}/vacations`                     | Get team calendar         |
 
-How to run locally:
+## ✨ How to run locally:
+```bash
+Clone project:
 
 git clone https://github.com/yourusername/manager-microservice.git
-cd manager-microservice
+cd manager-microservice bash
 
 Build project:
 
-./mvnw clean install
-
+./mvnw clean install 
 
 Run the application:
 
 ./mvnw spring-boot:run
-
-
-Unit tests cover:
-
-Unit tests cover:
-
-Shift request validation
-
-Vacation request validation
-
-Schedule conflict detection
-
-Successful and failing approval flows
-
-Integration tests cover REST Endpoints functionality
-
-Validation Rules
-
-Shifts and vacations must not overlap
-
-Only "pendin" shift or vacation requests can be approved
-
-Vacation days must be valid future dates
-
-Weekly working hours must not be exceeded
-
-Annual vacation days must not be exceeded
