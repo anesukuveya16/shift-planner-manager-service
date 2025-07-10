@@ -164,15 +164,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     return scheduleInApprovedShiftCalenderWeek;
   }
 
-  // TODO: combine instatiation and the add operation of the list
   private Schedule createNewScheduleForApprovedVacationRequest(
       Long employeeId, VacationRequest approvedVacationRequest) {
 
     List<VacationEntry> vacationEntries = new ArrayList<>();
-
-    VacationEntry vacationEntry =
-        VacationEntry.fromApprovedVacationRequest(approvedVacationRequest);
-    vacationEntries.add(vacationEntry);
+    vacationEntries.add(VacationEntry.fromApprovedVacationRequest(approvedVacationRequest));
 
     return Schedule.builder()
         .employeeId(employeeId)
@@ -218,9 +214,7 @@ public class ScheduleServiceImpl implements ScheduleService {
       Long employeeId, ShiftRequest approvedShiftRequest) {
 
     List<ShiftEntry> shiftEntries = new ArrayList<>();
-
-    ShiftEntry shiftEntry = ShiftEntry.fromApprovedShiftEntry(approvedShiftRequest);
-    shiftEntries.add(shiftEntry);
+    shiftEntries.add(ShiftEntry.fromApprovedShiftEntry(approvedShiftRequest));
 
     return Schedule.builder()
         .employeeId(employeeId)
