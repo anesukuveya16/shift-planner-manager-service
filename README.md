@@ -1,9 +1,9 @@
 
 # Shift Planner: Manager Service
 
-This microservice is part of an **employee scheduling system** in the healthcare sector.
+This microservice is part of an **employee scheduling system** in a health care facility.
 
-The **Manager Microservice** focuses on enabling managers to:
+The **Manager Microservice** focuses on enabling managers to excecute the following operations:
 
 - View and manage employee schedules  
 - Approve or reject shift requests  
@@ -12,8 +12,8 @@ The **Manager Microservice** focuses on enabling managers to:
 
 It operates **independently** of the Employee Microservice but communicates with it to:
 
-- To ensure proper validate employee of data  
-- Maintain consistency across the services
+- To ensure proper validation of employee data  
+- Maintain consistency across both services
 
 ## Tech Stack
 
@@ -54,24 +54,24 @@ REST Endpoints functionality
 
 Shifts and vacations must not overlap
 
-Only "pendin" shift or vacation requests can be approved
-
 Vacation days must be valid future dates
 
 Weekly working hours must not be exceeded
 
 Annual vacation days must not be exceeded
 
+Only "pending" shift or vacation requests can be approved or rejected
+
 ##  REST Endpints
 
 Schedule Request
 | Method | Endpoint                                      | Description             |
-| --------| -------------------------------------------   | ----------------------- |
-| `POST`  | `/schedules`                                  | Create schedule         |
+| --------| -------------------------------------------  | ----------------------- |
+| `POST`  | `/schedules`                                 | Create schedule         |
 | `PUT`   | `/schedules/{scheduleId}`                    | Update schedule         |
-| `GET`   | `/schedules/{scheduleId}`                     | Get schedule by ID      |
+| `GET`   | `/schedules/{scheduleId}`                    | Get schedule by ID      |
 | `GET`   | `/schedules/{scheduleId}/range`              | Get schedules in range  |
-| `DELETE`| `/schedules/{scheduleId}`                     | Delete schedule         |
+| `DELETE`| `/schedules/{scheduleId}`                    | Delete schedule         |
 
 
 
@@ -98,7 +98,7 @@ Vacation Request
 ```bash
 Clone project:
 
-git clone https://github.com/yourusername/manager-microservice.git
+git clone https://:github.com/anesukuveya16/Shift-planner-manager-service
 cd manager-microservice bash
 
 Build project:
